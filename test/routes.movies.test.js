@@ -65,4 +65,29 @@ describe('routes : movies', () => {
         });
     });
   });
+
+  describe('POST /api/v1/movies', () => { 
+    it('should return the movie that was added', (done) => {
+      chai.request(server)
+        .post('/api/v1/movies')
+        .send({
+          name: 'Titanic',
+          genre: 'Drama',
+          rating: 9,
+          explicit: true
+        })
+        .end((err, res) => {
+          should.not.exist(err);
+
+          res.status.should.equal(201);
+          res.type.should.equal('application/json');
+          res.body.status.should.eql('success');
+
+          res.body.data[0].should.include.keys(
+            'id', 'name', 'genre', 'rating', 'explicit'
+          );
+          done();
+        });
+    });
+  });
 });
