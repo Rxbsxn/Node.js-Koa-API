@@ -53,7 +53,11 @@ router.post(BASE_URL, async (ctx) => {
       };
     }
   } catch (err) {
-    console.log(err)
+    ctx.status = 400;
+    ctx.body = {
+      status: 'error',
+      message: err.message || 'Sorry, an error has occurred'
+    };
   }
 })
 

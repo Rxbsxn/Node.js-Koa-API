@@ -89,5 +89,21 @@ describe('routes : movies', () => {
           done();
         });
     });
+
+    it('should throw an error if the payload is malformed', (done) => {
+      chai.request(server)
+      .post('/api/v1/movies')
+      .send({ 
+        name: 'Titstanic'
+      })
+      .end((err, res) => { 
+        should.exist(err);
+        res.status.should.equal(400);
+        res.type.should.equal('application/json');
+        res.body.status.should.eql('error');
+        should.exist(res.body.message);
+        done();
+      });
+    });
   });
 });
