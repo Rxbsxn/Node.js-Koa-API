@@ -51,5 +51,18 @@ describe('routes : movies', () => {
           done();
         });
     });
+
+    it('should throw an error if the movie does not exist', (done) => {
+      chai.request(server)
+        .get('/api/v1/movies/2137')
+        .end((err, res) => {
+          should.exist (err);
+          res.status.should.equal(404);
+          res.type.should.equal('application/json');
+          res.body.status.should.eql('error');
+          res.body.message.should.eql('That movie does not exist.');
+          done();
+        });
+    });
   });
 });

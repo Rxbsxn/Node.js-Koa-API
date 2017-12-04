@@ -19,10 +19,18 @@ router.get(BASE_URL, async (ctx) => {
 router.get(`${BASE_URL}/:id`, async (ctx) => { 
   try {
     const movie = await queries.getSingleMovie(ctx.params.id);
-    ctx.body = {
-      status: 'success',
-      data: movie
-    };
+    if(movie.length) {
+      ctx.body = {
+        status: 'success',
+        data: movie
+      };
+    } else {
+      ctx.status = 404;
+      ctx.body = {
+        status: 'error',
+        message: 'That movie does not exist.'
+      };
+    }
   } catch (err) {
     console.log(err)
   }
