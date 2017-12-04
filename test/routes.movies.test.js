@@ -153,4 +153,50 @@ describe('routes : movies', () => {
       });
     });
   });
+
+  describe('DELETE /api/v1/movies/:id', () => {
+    it('should return the movie that was deleted', (done) => {
+      knex('movies')
+      .select('*')
+      .then((movies) => {
+        const movieObject = movies[0];
+        const lengthBeforeDelete = movies.length;
+        chai.request(server)
+        .delete(`/api/v1/movies/${movieObject.id}`)
+        .end((err, res) => {
+          should.not.exist(err);
+
+          res.status.should.equal(200);
+
+          res.type.should.equal('application/json');
+          res.body.status.should.eql('success');
+          res.body.data[0].should.include.keys(
+            'id', 'name', 'genre', 'rating', 'explicit'
+          );
+
+          knex('movies').select('*')
+          .then((updatedMovies) => {
+            updatedMovies.length.should.eql(lengthBeforeDelete - 1);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should throw an error if the movie does not exist', (done) => {
+      chai.request(server)
+      .delete('/api/v1/movies/2137')
+      .end((err, res) => {
+        should.exist(err);
+
+        res.status.should.equal(404);
+        res.type.should.equal('application/json');
+
+        res.body.status.should.eql('error');
+
+        res.body.message.should.eql('That movie does not exist.');
+        done();
+      });
+    });
+  });
 });
