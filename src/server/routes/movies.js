@@ -16,4 +16,16 @@ router.get(BASE_URL, async (ctx) => {
   }
 })
 
+router.get(`${BASE_URL}/:id`, async (ctx) => { 
+  try {
+    const movie = await queries.getSingleMovie(ctx.params.id);
+    ctx.body = {
+      status: 'success',
+      data: movie
+    };
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 module.exports = router;

@@ -35,4 +35,21 @@ describe('routes : movies', () => {
         });
     });
   });
+
+  describe('GET /api/v1/movies/:id', () => {
+    it('should response with single movie', (done) => {
+      chai.request(server)
+        .get('/api/v1/movies/1')
+        .end((err, res) => { 
+          should.not.exist(err);
+          res.status.should.equal(200);
+          res.type.should.equal('application/json');
+          res.body.status.should.eql('success');
+          res.body.data[0].should.include.keys(
+            'id', 'name', 'genre', 'rating', 'explicit'
+          );
+          done();
+        });
+    });
+  });
 });
