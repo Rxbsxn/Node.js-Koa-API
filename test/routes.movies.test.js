@@ -106,4 +106,33 @@ describe('routes : movies', () => {
       });
     });
   });
+
+  describe('Put /api/v1/movies', () => {
+    it('should return the movie that was updated', (done) => {
+      knex('movies')
+      .select('*')
+      .then((movies) => {
+        const movieObject = movies[0];
+        chai.request(server)
+        .put(`/api/v1/movies/${movieObject.id}`)
+        .send({
+          rating: 9
+        })
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.equal(200);
+          res.type.should.equal('application/json');
+          res.body.status.should.eql('success');
+
+          res.body.data[0].should.include.keys(
+            'id', 'name', 'genre', 'rating', 'explicit'
+          );
+          
+          const newMovieObject = res.body.data[0];
+          newMovieObject.rating.should.not.eql(movieObject.rating);
+          done();
+        });
+      });
+    });
+  });
 });

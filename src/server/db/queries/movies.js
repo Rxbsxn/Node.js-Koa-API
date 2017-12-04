@@ -14,8 +14,16 @@ function addMovie(movie) {
   .returning('*');
 }
 
+function updateMovie(id, movie) {
+  return knex('movies')
+  .update(movie)
+  .where( { id: +id })
+  .returning('*');
+}
+
 module.exports = {
   getAllMovies,
   getSingleMovie,
-  addMovie
+  addMovie,
+  updateMovie
 };
