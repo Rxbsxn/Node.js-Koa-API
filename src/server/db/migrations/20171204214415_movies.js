@@ -1,6 +1,6 @@
 
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable('movies', (tables) => {
+  return knex.schema.createTable('movies', (table) => {
     table.increments();
     table.string('name').notNullable().unique();
     table.string('genre').notNullable();
